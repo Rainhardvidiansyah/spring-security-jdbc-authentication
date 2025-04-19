@@ -38,7 +38,7 @@ public class UserRepository {
 
     public UserInfo findOneUser(String email){
         String sql = """
-        SELECT email, password, enabled FROM users WHERE users.enabled = 1 and users.email = ?
+        SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
         """;
         try{
             UserInfo userInfo =
