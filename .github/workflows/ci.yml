@@ -30,4 +30,7 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Run Tests
+        run: mvn test -Dspring.profiles.active=test
+
+      - name: Run Tests
         run: mvn test
