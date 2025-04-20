@@ -69,4 +69,14 @@ public class UserRepository {
                 .collect(Collectors.toList());
     }
 
+
+
+    public List<UserInfo> getAllUsers(){
+        String sql = """
+                SELECT * FROM users
+                """;
+        List<UserInfo> userInfo = this.jdbcTemplate.query(sql, new UserInfoMapper());
+        return userInfo;
+    }
+
 }
