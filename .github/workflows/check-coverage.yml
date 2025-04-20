@@ -1,0 +1,39 @@
+name: Check Coverage
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run tests and generate coverage
+        run: ./mvnw clean verify
+
+      - name: Enforce minimum coverage (80%)
+        run: |
+          if [ ! -f target/site/jacoco/jacoco.xml ]; then
+          echo "Coverage report not found!"
+          exit 1
+          fi
+          
+          COVERAGE=$(grep -A 1 '<counter type="INSTRUCTION"' target/site/jacoco/jacoco.xml | grep -oP 'covered="\d+"' | grep -oP '\d+' | awk '{sum+=$1} END {print sum}')
+          MISSED=$(grep -A 1 '<counter type="INSTRUCTION"' target/site/jacoco/jacoco.xml | grep -oP 'missed="\d+"' | grep -oP '\d+' | awk '{sum+=$1} END {print sum}')
+          TOTAL=$((COVERAGE + MISSED))
+          PERCENT=$((COVERAGE * 100 / TOTAL))
+          echo "Coverage: $PERCENT%"
+          if [ $PERCENT -lt 80 ]; then
+            echo "Coverage must be at least 80%. Current: $PERCENT%"
+            exit 1
+          fi
