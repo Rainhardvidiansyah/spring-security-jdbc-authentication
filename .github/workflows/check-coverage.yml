@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Give execute permission to mvnw
-        run: chmod +x ./mvnw
+        run: chmod +x mvnw
 
       - name: Run tests and generate coverage
         run: ./mvnw clean verify
