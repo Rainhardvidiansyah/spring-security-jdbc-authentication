@@ -7,12 +7,14 @@ import com.security.jdbc.pojos.Authorities;
 import com.security.jdbc.pojos.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,11 +74,20 @@ public class UserRepository {
 
 
     public List<UserInfo> getAllUsers(){
-        String sql = """
+        logger.info("Get all users method is hit");
+
+        try {
+            String sql = """
                 SELECT * FROM users
                 """;
-        List<UserInfo> userInfo = this.jdbcTemplate.query(sql, new UserInfoMapper());
-        return userInfo;
+            List<UserInfo> userInfo = this.jdbcTemplate.query(sql, new UserInfoMapper());
+            return userInfo;
+        }catch (DataAccessException e){
+            logger.error("The thrown error: {}", e.getMessage());
+            logger.error("Failed to fetch users from the database", e);
+            return null;
+        }
+
     }
 
 }
