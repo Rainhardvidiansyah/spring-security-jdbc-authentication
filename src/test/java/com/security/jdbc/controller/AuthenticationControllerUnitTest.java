@@ -67,7 +67,11 @@ public class AuthenticationControllerUnitTest {
 
     @Test
     void login_shouldResponseWithOk() throws Exception {
-        LoginRequestDto loginRequestDto = new LoginRequestDto("user@example.com", "password");
+        String email = "maul@email.com";
+        String password = "password";
+        LoginRequestDto loginRequestDto = new LoginRequestDto();
+        loginRequestDto.setEmail(email);
+        loginRequestDto.setPassword(password);
 
         String body = objectMapper.writeValueAsString(loginRequestDto);
 
