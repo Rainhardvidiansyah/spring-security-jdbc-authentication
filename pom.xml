@@ -127,6 +127,14 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>com/security/jdbc/dto/**</exclude>
+								<exclude>com/security/jdbc/mapper/**</exclude>
+								<exclude>com/security/jdbc/pojos/**</exclude>
+								<exclude>package com.security.jdbc.security</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
