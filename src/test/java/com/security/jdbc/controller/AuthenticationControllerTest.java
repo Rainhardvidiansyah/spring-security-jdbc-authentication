@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.jdbc.dto.request.LoginRequestDto;
 import com.security.jdbc.dto.request.RegistrationRequestDto;
 import com.security.jdbc.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -32,6 +34,9 @@ class AuthenticationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @MockBean
     private UserService userService;
 
@@ -40,6 +45,24 @@ class AuthenticationControllerTest {
 
     @MockBean
     private AuthenticationManager authenticationManager;
+
+    @Test
+    void encodePassword_shouldPrintDifferentResult(){
+        String rawPassword = "password";
+
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        Assertions.assertNotEquals(rawPassword, encodedPassword);
+    }
+
+    @Test
+    void differentPassword_shouldReturnFalse(){
+        String password = "password";
+
+        String encode = passwordEncoder.encode(password);
+
+        Assertions.assertTrue(passwordEncoder.matches(password, encode));
+    }
 
     @Test
     void registerUser_shouldReturnSuccessMessage() throws Exception {
