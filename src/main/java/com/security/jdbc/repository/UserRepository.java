@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,8 @@ public class UserRepository {
 
 
     public List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email) {
-        String authoritiesQuery = """
+
+            String authoritiesQuery = """
         SELECT a.authorities_name as authority
         FROM user_authorities ua
         JOIN users u on ua.user_id = u.id
@@ -59,14 +61,26 @@ public class UserRepository {
         WHERE u.email = ?
         """;
 
-        List<Authorities> authorities = jdbcTemplate.query(authoritiesQuery, new AuthoritiesMapper(), email);
+            List<Authorities> authorities = jdbcTemplate.query(authoritiesQuery, new AuthoritiesMapper(), email);
 
-        logger.info("Retrieved authorities: {}", authorities);
-        logger.info("The size of authorities: {}", authorities.size());
+            logger.info("Retrieved authorities: {}", authorities);
+            logger.info("The size of authorities: {}", authorities.size());
 
-        return authorities.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                .collect(Collectors.toList());
+            return authorities.stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                    .collect(Collectors.toList());
+    }
+
+
+
+    public List<UserInfo> getAllUsers(){
+        logger.info("Get all users method is hit");
+
+            String sql = """
+                SELECT * FROM users
+                """;
+            List<UserInfo> userInfo = this.jdbcTemplate.query(sql, new UserInfoMapper());
+            return userInfo;
     }
 
 }

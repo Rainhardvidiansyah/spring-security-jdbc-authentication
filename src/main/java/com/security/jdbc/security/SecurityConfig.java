@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -49,12 +50,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/v1/users/auth/**").permitAll()
-                        .requestMatchers("/api/v1/public/**").permitAll()
-                        .anyRequest().authenticated());
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/auth/register")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "api/v1/users/auth/login")
+                        .permitAll()
+                        .requestMatchers("/api/v1/public/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .authenticationProvider(authenticationProvider());
+//.authenticationProvider(authenticationProvider())
+//httpSecurity.csrf((c) -> c.ignoringRequestMatchers("/api/v1/users/auth/register")) //Will be used later. Now, don't use this!!
     return httpSecurity.build();
     }
 
