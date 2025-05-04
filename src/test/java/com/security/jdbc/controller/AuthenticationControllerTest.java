@@ -74,7 +74,8 @@ class AuthenticationControllerTest {
         registrationDto.setEmail(email);
         registrationDto.setPassword(password);
 
-        Mockito.when(userService.addUser(email, password)).thenReturn("User registered successfully!");
+//        Mockito.when(userService.addUser(email, password)).thenReturn("User registered successfully!");
+        Mockito.when(userService.addUser(registrationDto.getEmail(), registrationDto.getPassword())).thenReturn("User registered successfully!");
 
         // Act
         mockMvc.perform(post("/api/v1/users/auth/register")
@@ -93,7 +94,12 @@ class AuthenticationControllerTest {
 
     @Test
     void login() throws Exception {
-        LoginRequestDto loginRequestDto = new LoginRequestDto("rainhard@email.com", "password");
+        String email = "rainhard@email.com";
+        String password = "password";
+
+        LoginRequestDto loginRequestDto = new LoginRequestDto();
+        loginRequestDto.setEmail(email);
+        loginRequestDto.setPassword(password);
 
         String body = objectMapper.writeValueAsString(loginRequestDto);
 
@@ -106,7 +112,7 @@ class AuthenticationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk());
-                //.andExpect(content().string("User login successfully!"));
+//                .andExpect(content().string("User login successfully!"));
 
     }
 
