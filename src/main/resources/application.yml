@@ -1,3 +1,9 @@
 spring:
   profiles:
-    active: test
+    active: dev
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG
+
+
+
