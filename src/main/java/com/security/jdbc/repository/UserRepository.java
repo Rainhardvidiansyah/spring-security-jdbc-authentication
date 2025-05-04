@@ -7,14 +7,13 @@ import com.security.jdbc.pojos.Authorities;
 import com.security.jdbc.pojos.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +52,8 @@ public class UserRepository {
 
 
     public List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email) {
-        String authoritiesQuery = """
+
+            String authoritiesQuery = """
         SELECT a.authorities_name as authority
         FROM user_authorities ua
         JOIN users u on ua.user_id = u.id
@@ -61,14 +61,14 @@ public class UserRepository {
         WHERE u.email = ?
         """;
 
-        List<Authorities> authorities = jdbcTemplate.query(authoritiesQuery, new AuthoritiesMapper(), email);
+            List<Authorities> authorities = jdbcTemplate.query(authoritiesQuery, new AuthoritiesMapper(), email);
 
-        logger.info("Retrieved authorities: {}", authorities);
-        logger.info("The size of authorities: {}", authorities.size());
+            logger.info("Retrieved authorities: {}", authorities);
+            logger.info("The size of authorities: {}", authorities.size());
 
-        return authorities.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                .collect(Collectors.toList());
+            return authorities.stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                    .collect(Collectors.toList());
     }
 
 
@@ -76,18 +76,11 @@ public class UserRepository {
     public List<UserInfo> getAllUsers(){
         logger.info("Get all users method is hit");
 
-        try {
             String sql = """
                 SELECT * FROM users
                 """;
             List<UserInfo> userInfo = this.jdbcTemplate.query(sql, new UserInfoMapper());
             return userInfo;
-        }catch (DataAccessException e){
-            logger.error("The thrown error: {}", e.getMessage());
-            logger.error("Failed to fetch users from the database", e);
-            return null;
-        }
-
     }
 
 }
