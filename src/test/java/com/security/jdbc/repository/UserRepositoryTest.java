@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +20,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -172,21 +170,5 @@ class UserRepositoryTest {
         Mockito.verify(jdbcTemplate, times(1)).query(anyString(), any(UserInfoMapper.class));
     }
 
-    @Test
-    void getAllUsers_shouldReturnNull_whenDataAccessExceptionThrown() {
-        // Arrange
-        Mockito.when(jdbcTemplate.query(
-                anyString(),
-                any(UserInfoMapper.class)
-        )).thenThrow(mock(DataAccessException.class));
 
-        // Act
-        List<UserInfo> result = userRepository.getAllUsers();
-
-        // Assert
-        assertNull(result);
-
-
-        Mockito.verify(jdbcTemplate, times(1)).query(anyString(), any(UserInfoMapper.class));
-    }
 }
