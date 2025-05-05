@@ -1,9 +1,12 @@
 spring:
   profiles:
-    active: dev
+    active: test
 logging:
   level:
     org.springframework.boot.context.config: DEBUG
 
-
+#To use environment either dev or test
+#Delete or comment spring.profiles.active
+#then write down a command below:
+#  mvn spring-boot:run -Dspring-boot.run.profiles=test
 
