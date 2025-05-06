@@ -3,8 +3,10 @@ package com.security.jdbc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.jdbc.dto.request.LoginRequestDto;
 import com.security.jdbc.dto.request.RegistrationRequestDto;
+import com.security.jdbc.security.jwt.JwtService;
 import com.security.jdbc.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,6 +41,9 @@ public class AuthenticationControllerUnitTest {
 
     @MockBean
     private AuthenticationManager authenticationManager;
+
+    @MockBean
+    private JwtService jwtService;
 
     @Test
     void whenUserRegister_thenReturn_isCreated() throws Exception {
@@ -78,6 +83,7 @@ public class AuthenticationControllerUnitTest {
         Authentication auth = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
         Mockito.when(authenticationManager.authenticate(any())).thenReturn(auth);
+        Mockito.when(jwtService.generateTokenJwt(auth)).thenReturn(ArgumentMatchers.anyString());
 
         mockMvc.perform(post("/api/v1/users/auth/login")
                         .with(csrf())
