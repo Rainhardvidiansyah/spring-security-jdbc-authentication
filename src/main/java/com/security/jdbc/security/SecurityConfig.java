@@ -1,6 +1,8 @@
 package com.security.jdbc.security;
 
 
+import com.security.jdbc.security.jwt.JwtAuthEntry;
+import com.security.jdbc.security.jwt.JwtAuthFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,28 +21,32 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.sql.DataSource;
 
 @Configuration
+@EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityConfig {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
+    private final UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private DataSource dataSource;
+    private final JwtAuthFilter jwtAuthFilter;
 
+    private final JwtAuthEntry jwtAuthEntry;
+
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthFilter jwtAuthFilter, JwtAuthEntry jwtAuthEntry) {
+        this.userDetailsService = userDetailsService;
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.jwtAuthEntry = jwtAuthEntry;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
 
 
     @Bean
@@ -60,10 +67,11 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/public/**")
                         .permitAll()
-                        .anyRequest().authenticated())
-                .authenticationProvider(authenticationProvider());
-//.authenticationProvider(authenticationProvider())
-//httpSecurity.csrf((c) -> c.ignoringRequestMatchers("/api/v1/users/auth/register")) //Will be used later. Now, don't use this!!
+                        .anyRequest().authenticated());
+                //httpSecurity.csrf((c) -> c.ignoringRequestMatchers("/api/v1/users/auth/register")) //Will be used later. Now, don't use this!!
+        httpSecurity.exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthEntry));
+        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
     return httpSecurity.build();
     }
 
