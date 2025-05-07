@@ -4,6 +4,7 @@ package com.security.jdbc.controller;
 import com.security.jdbc.dto.request.LoginRequestDto;
 import com.security.jdbc.dto.request.RegistrationRequestDto;
 import com.security.jdbc.security.UserDetailsImpl;
+import com.security.jdbc.security.jwt.JwtService;
 import com.security.jdbc.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,15 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final JwtService jwtService;
 
-    public AuthenticationController(UserService userService, AuthenticationManager authenticationManager){
+
+    public AuthenticationController(UserService userService,
+                                    AuthenticationManager authenticationManager,
+                                    JwtService jwtService){
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -63,13 +69,20 @@ public class AuthenticationController {
 
         LOGGER.info("User authenticated successfully: {}", authentication.getName());
 
+        String generatedJwt = this.jwtService.generateTokenJwt(authentication);
+        LOGGER.info("GENERATED JWT TOKEN: {}", generatedJwt);
+
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        LOGGER.info("User details data: {}", userDetails);
 
-        LOGGER.info("Authorities that user has: {}", authentication.getAuthorities());
-        LOGGER.info("Authorities from User details: {}", userDetails.getAuthorities());
-        LOGGER.info("is user enabled: {}", userDetails.isEnabled());
-
-
-        return "User login successfully!";
+        return "User login successfully with jwt token: " + generatedJwt;
     }
+
+
+    @GetMapping("/")
+    public String getMe(Authentication authentication){
+        return "Hi, there " + authentication.getName();
+    }
+
 }
