@@ -3,6 +3,9 @@ package com.security.jdbc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.jdbc.dto.request.LoginRequestDto;
 import com.security.jdbc.dto.request.RegistrationRequestDto;
+import com.security.jdbc.security.UserDetailsServiceImpl;
+import com.security.jdbc.security.jwt.JwtAuthEntry;
+import com.security.jdbc.security.jwt.JwtAuthFilter;
 import com.security.jdbc.security.jwt.JwtService;
 import com.security.jdbc.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -44,6 +47,23 @@ public class AuthenticationControllerUnitTest {
 
     @MockBean
     private JwtService jwtService;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
+    private JwtAuthFilter jwtAuthFilter;
+
+    @MockBean
+    private JwtAuthEntry jwtAuthEntry;
+
+    /*
+    Load JwtAuthFilter and JwtAuthEntry here.
+    This is mandatory as WebMvcTest doesn't know
+    the real flow behind the program.
+    This is difficult to maintain, but we can use test class
+    annotated with SpringBOotTest.
+     */
 
     @Test
     void whenUserRegister_thenReturn_isCreated() throws Exception {
