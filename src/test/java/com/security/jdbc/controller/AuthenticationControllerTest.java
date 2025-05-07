@@ -3,6 +3,7 @@ package com.security.jdbc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.jdbc.dto.request.LoginRequestDto;
 import com.security.jdbc.dto.request.RegistrationRequestDto;
+import com.security.jdbc.security.jwt.JwtService;
 import com.security.jdbc.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -45,6 +47,9 @@ class AuthenticationControllerTest {
 
     @MockBean
     private AuthenticationManager authenticationManager;
+
+    @MockBean
+    private JwtService jwtService;
 
     @Test
     void encodePassword_shouldPrintDifferentResult(){
@@ -74,7 +79,6 @@ class AuthenticationControllerTest {
         registrationDto.setEmail(email);
         registrationDto.setPassword(password);
 
-//        Mockito.when(userService.addUser(email, password)).thenReturn("User registered successfully!");
         Mockito.when(userService.addUser(registrationDto.getEmail(), registrationDto.getPassword())).thenReturn("User registered successfully!");
 
         // Act
@@ -106,6 +110,7 @@ class AuthenticationControllerTest {
         Authentication auth = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
         Mockito.when(authenticationManager.authenticate(any())).thenReturn(auth);
+        Mockito.when(jwtService.generateTokenJwt(auth)).thenReturn(anyString());
 
         mockMvc.perform(post("/api/v1/users/auth/login")
                         .with(csrf())
