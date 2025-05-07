@@ -20,8 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import java.lang.reflect.Method;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@SpringBootTest
+@SpringBootTest(properties = "access.token.secret=secreeeeeeeetttttitogjbnglrogjjari4849393tugojglgjrigngignbirjglkirlr")
 @AutoConfigureMockMvc
 class AuthenticationControllerTest {
 
@@ -48,7 +49,7 @@ class AuthenticationControllerTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
-    @MockBean
+    @Autowired
     private JwtService jwtService;
 
     @Test
@@ -110,7 +111,9 @@ class AuthenticationControllerTest {
         Authentication auth = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
         Mockito.when(authenticationManager.authenticate(any())).thenReturn(auth);
-        Mockito.when(jwtService.generateTokenJwt(auth)).thenReturn(anyString());
+        String generatedToken = this.jwtService.generateTokenJwt(auth); //Perform the logic. So use the autowired annotation
+
+        Assertions.assertNotNull(generatedToken);
 
         mockMvc.perform(post("/api/v1/users/auth/login")
                         .with(csrf())
@@ -122,5 +125,23 @@ class AuthenticationControllerTest {
     }
 
 
+    @Test
+    void extractSubject() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("rainhard.vidi@email.com", "password");
+
+        String generatedToken = jwtService.generateTokenJwt(authentication);
+
+        Assertions.assertNotNull(generatedToken);
+
+        String extractedSubject = jwtService.extractSubject(generatedToken);
+        Assertions.assertNotNull(extractedSubject);
+        Assertions.assertEquals("rainhard.vidi@email.com", extractedSubject);
+
+        boolean isTokenExpired = jwtService.isTokenExpired(generatedToken);
+        Assertions.assertFalse(isTokenExpired);
+    }
+
+
+   //TODO: TEST EXTRACT ALL CLAIMS AND CLAIM METHOD
 }
 
