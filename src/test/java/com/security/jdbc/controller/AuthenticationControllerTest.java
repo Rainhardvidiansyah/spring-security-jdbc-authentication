@@ -5,6 +5,7 @@ import com.security.jdbc.dto.request.LoginRequestDto;
 import com.security.jdbc.dto.request.RegistrationRequestDto;
 import com.security.jdbc.security.jwt.JwtService;
 import com.security.jdbc.service.UserService;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import javax.crypto.SecretKey;
 import java.lang.reflect.Method;
+import java.util.function.Function;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -30,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@SpringBootTest(properties = "access.token.secret=secreeeeeeeetttttitogjbnglrogjjari4849393tugojglgjrigngignbirjglkirlr")
+@SpringBootTest(properties = "access.token.secret=RxBnso0BBBeemEMOcOFrHTD67Sqgzo4M")
 @AutoConfigureMockMvc
 class AuthenticationControllerTest {
 
@@ -132,6 +135,7 @@ class AuthenticationControllerTest {
         String generatedToken = jwtService.generateTokenJwt(authentication);
 
         Assertions.assertNotNull(generatedToken);
+        System.out.println("GENERATED TOKEN: " + generatedToken);
 
         String extractedSubject = jwtService.extractSubject(generatedToken);
         Assertions.assertNotNull(extractedSubject);
@@ -139,9 +143,53 @@ class AuthenticationControllerTest {
 
         boolean isTokenExpired = jwtService.isTokenExpired(generatedToken);
         Assertions.assertFalse(isTokenExpired);
+
+        Claims claims = getPrivateClaims(generatedToken);
+        Assertions.assertNotNull(claims);
+        System.out.println("Claims: " + claims);
+        //result of claims: Claims: {sub=rainhard.vidi@email.com, role=[],
+        // email=rainhard.vidi@email.com, iat=1746701323, iss=ERP-MODULE-Rainhard, exp=1746704923}
+        Assertions.assertEquals("rainhard.vidi@email.com", claims.get("email"));
+
+        String extractedEmail = extractClaim(generatedToken, cl -> cl.get("email", String.class));
+        Assertions.assertEquals("rainhard.vidi@email.com", extractedEmail);
+
+
     }
 
 
-   //TODO: TEST EXTRACT ALL CLAIMS AND CLAIM METHOD
+   //TODO: TEST EXTRACT ALL CLAIMS AND EXTRACT CLAIM
+    private Claims getPrivateClaims(String token){
+        try {
+            Method method = JwtService.class.getDeclaredMethod("extractAllClaims", String.class);
+            method.setAccessible(true);
+            return (Claims) method.invoke(jwtService, token);
+        }catch (Exception e){
+            throw new RuntimeException("Cannot extract Claims", e);
+        }
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> resolver){
+        try {
+            Method method = JwtService.class.getDeclaredMethod("extractClaim", String.class, Function.class);
+            method.setAccessible(true);
+            return (T) method.invoke(jwtService, token, resolver);
+        }catch (Exception e){
+            throw new RuntimeException("Extract claim cannot be used", e);
+        }
+    }
+
+    @Test
+    void getSigningKeyShouldReturnValidSecretKey() throws Exception {
+        Method method = JwtService.class.getDeclaredMethod("getSigningKey");
+        method.setAccessible(true);
+
+        SecretKey key = (SecretKey) method.invoke(jwtService);
+
+        Assertions.assertNotNull(key);
+        Assertions.assertEquals("HmacSHA256", key.getAlgorithm());
+    }
+
+
 }
 
