@@ -7,7 +7,7 @@ export let options = {
 };
 
 export default function () {
-  const res = http.get('http://host.docker.internal:8080/api/v1/public/');
+  const res = http.get('http://app:8080/api/v1/public/');
   check(res, {
     'status is 200': (r) => r.status === 200,
   });
