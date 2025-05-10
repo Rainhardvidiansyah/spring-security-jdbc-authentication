@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+
+  jpa:
+    open:
+      in-view: ${SPRING_JPA_OPEN_IN_VIEW}
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    show-sql: ${SPRING_JPA_SHOW_SQL}
+    properties:
+      hibernate:
+        format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM}
+
+  flyway:
+    enable: ${SPRING_FLYWAY_ENABLE}
+    locations: ${SPRING_FLYWAY_LOCATIONS}
+
+server:
+  port: ${SERVER_PORT}
+
+access:
+  token:
+    secret: ${ACCESS_TOKEN_SECRET}
