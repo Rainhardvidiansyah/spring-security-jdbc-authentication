@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.security.jdbc</groupId>
-	<artifactId>Spring-Security-Jdbc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Spring-Security-Jdbc</name>
+	<artifactId>rainhard-modules-erp</artifactId>
+	<version>0.0.1</version>
+	<name>modules-rainhard-erp</name>
 	<description>Security with Jdbc Api</description>
 	<url/>
 	<licenses>
