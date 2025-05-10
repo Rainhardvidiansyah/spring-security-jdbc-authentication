@@ -13,6 +13,17 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/h2
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 466856da640c75
+    password: 5e3d518d7bc0ca
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
 
   test:
     database:
