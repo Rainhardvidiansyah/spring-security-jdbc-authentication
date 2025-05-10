@@ -1,0 +1,72 @@
+
+name: erp-modules-project
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql-db
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3320:3306"
+    networks:
+      - app-network
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: erp-module-rainhard
+    env_file:
+      - .env
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+    depends_on:
+      - mysql-db
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  k6:
+    image: grafana/k6
+    container_name: k6
+    volumes:
+      - ./scripts:/scripts
+    working_dir: /scripts
+    entrypoint: [ "k6" ]
+    # change everytime you wanna test a different class.
+    # example: from test-login.js to test-register.js
+    command: [ "run", "test-login.js" ]
+    networks:
+      - app-network
+    profiles:
+      - test
+
+
+networks:
+  app-network:
+
+
+# docker compose --profile test up --build k6
+
+#from Google:
+#Docker Compose automatically reads the .env file located in the same directory as the docker-compose.yml file.
+#This behavior allows for managing environment variables conveniently without explicitly specifying them in the docker-compose.yml
+#or through command-line arguments.
+#The variables defined in the .env file are accessible both for Docker Compose's own configuration
+# and for the services defined within the docker-compose.yml.
+#If a variable is defined in multiple places,
+#the order of precedence is as follows (from highest to lowest):
+#docker compose run -e, shell environment/.env with interpolation,
+#environment attribute in docker-compose.yml, env_file attribute in docker-compose.yml, ENV directive in Dockerfile.
