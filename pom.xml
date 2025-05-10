@@ -82,6 +82,14 @@
 		</dependency>
 		<!-- END REDIS-->
 
+		<!--START OF EMAIL-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<version>3.1.5</version>
+		</dependency>
+		<!--END OF EMAIL-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
