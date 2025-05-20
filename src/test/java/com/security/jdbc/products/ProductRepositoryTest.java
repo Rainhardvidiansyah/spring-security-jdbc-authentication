@@ -1,7 +1,8 @@
-package com.security.jdbc.product.repository;
+package com.security.jdbc.products;
 
 import com.security.jdbc.product.dto.request.CreateProductDtoRequest;
 import com.security.jdbc.product.dto.response.ProductResponseDto;
+import com.security.jdbc.product.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,14 +15,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
+
 
 @ExtendWith(MockitoExtension.class)
 class ProductRepositoryTest {
