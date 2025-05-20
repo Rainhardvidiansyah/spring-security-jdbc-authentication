@@ -159,6 +159,7 @@
 								<exclude>com/security/jdbc/dto/**</exclude>
 								<exclude>com/security/jdbc/mapper/**</exclude>
 								<exclude>com/security/jdbc/pojos/**</exclude>
+								<exclude>com.security.jdbc.product.dto/**</exclude>
 								<exclude>package com.security.jdbc.security</exclude>
 							</excludes>
 						</configuration>
