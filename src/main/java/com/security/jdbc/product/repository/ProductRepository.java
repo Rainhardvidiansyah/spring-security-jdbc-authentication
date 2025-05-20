@@ -103,16 +103,16 @@ public class ProductRepository {
     //TODO: GET PRODUCT BY NAME
 
     //TODO: DYNAMIC QUERY FILTER
-    public void getAllProducts(String name, int price){
-        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
-
-        List<String> params = new ArrayList<>();
-
-        if(name!=null || !name.isEmpty()){
-            sql.append("AND name LIKE ?");
-            params.add("% name %");
-        }
-    }
+//    public void getAllProducts(String name, int price){
+//        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
+//
+//        List<String> params = new ArrayList<>();
+//
+//        if(name!=null || !name.isEmpty()){
+//            sql.append("AND name LIKE ?");
+//            params.add("% name %");
+//        }
+//    }
 }
 
 
