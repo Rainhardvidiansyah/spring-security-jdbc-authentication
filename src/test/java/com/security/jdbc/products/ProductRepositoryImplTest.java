@@ -15,8 +15,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,9 +52,16 @@ class ProductRepositoryImplTest {
         Mockito.when(jdbcTemplate.update(ArgumentMatchers.any(PreparedStatementCreator.class),
                 ArgumentMatchers.any(KeyHolder.class))).thenAnswer(invocation -> {
             KeyHolder kh = invocation.getArgument(1);
-            kh.getKeyList().add(Collections.singletonMap("id", 1L));
+            List<Map<String, Object>> keyList = new ArrayList<>();
+            keyList.add(Collections.singletonMap("GENERATED_KEY", 1L));
+
+            Field keyListField = GeneratedKeyHolder.class.getDeclaredField("keyList");
+            keyListField.setAccessible(true);
+            keyListField.set(kh, keyList);
+
             return 1;
         });
+
 
         // Act
         CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
