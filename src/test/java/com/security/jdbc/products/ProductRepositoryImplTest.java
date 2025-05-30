@@ -2,7 +2,7 @@ package com.security.jdbc.products;
 
 import com.security.jdbc.product.dto.request.CreateProductDtoRequest;
 import com.security.jdbc.product.dto.response.ProductResponseDto;
-import com.security.jdbc.product.repository.ProductRepository;
+import com.security.jdbc.product.repository.ProductRepositoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +22,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class ProductRepositoryTest {
+class ProductRepositoryImplTest {
 
 
     @Mock
     private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private ProductRepository productRepository;
+    private ProductRepositoryImpl productRepositoryImpl;
 
 
     @Test
@@ -54,7 +54,7 @@ class ProductRepositoryTest {
         });
 
         // Act
-        CreateProductDtoRequest result = productRepository.insertProduct(request);
+        CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
 
         // Assert
         assertNotNull(result);
@@ -77,7 +77,7 @@ class ProductRepositoryTest {
                 .thenReturn(0);
 
         // Act
-        CreateProductDtoRequest result = productRepository.insertProduct(request);
+        CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
 
         // Assert
         assertNull(result);
@@ -95,7 +95,7 @@ class ProductRepositoryTest {
                 .thenThrow(new DataAccessException("DB error") {});
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> productRepository.insertProduct(request));
+        assertThrows(RuntimeException.class, () -> productRepositoryImpl.insertProduct(request));
     }
 
     @Test
@@ -115,7 +115,7 @@ class ProductRepositoryTest {
                 .thenReturn(expectedList);
 
         // Act
-        List<ProductResponseDto> actualList = productRepository.getAllProducts();
+        List<ProductResponseDto> actualList = productRepositoryImpl.getAllProducts();
 
         // Assert
         Assertions.assertNotNull(actualList);
@@ -139,7 +139,7 @@ class ProductRepositoryTest {
         Mockito.when(jdbcTemplate.query(Mockito.anyString(), Mockito.any(RowMapper.class)))
                 .thenThrow(new DataAccessException("DB Error") {});
 
-        Assertions.assertThrows(DataAccessException.class, () -> productRepository.getAllProducts());
+        Assertions.assertThrows(DataAccessException.class, () -> productRepositoryImpl.getAllProducts());
     }
 
 }
