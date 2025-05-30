@@ -28,11 +28,12 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 
     //TODO: ADD SAVE PRODUCT
+    @Override
     public CreateProductDtoRequest insertProduct(CreateProductDtoRequest productDtoRequest){
-        LOGGER.info("INSERT PRODUCT METHOD IS HIT");
+        //LOGGER.info("INSERT PRODUCT METHOD IS HIT");
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO products (name, sku, description, price, stock_quantity) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO products (name, sku, description, price, stock_quantity) VALUES (?, ?, ?, ?, ?)";
 
         try {
 
@@ -48,18 +49,15 @@ public class ProductRepositoryImpl implements ProductRepository {
                     }, keyHolder);
 
             Number key = keyHolder.getKey();
-            LOGGER.info("CONTENT OF KEY: {}", key);
 
             if (row == 1) {
-                LOGGER.info("PRODUCT INSERTED WITH SKU: {}", productDtoRequest.getSku());
-                Long productId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-                LOGGER.info("PRODUCT ID IS: {}", productId);
+                //Long productId = Objects.requireNonNull(keyHolder.getKey()).longValue();
                 return productDtoRequest;
             } else {
                 return null;
             }
         } catch (DataAccessException e) {
-            LOGGER.error("DB ERROR!");
+           // LOGGER.error("DB ERROR!", e);
             throw new RuntimeException(e);
         }
     }
@@ -67,8 +65,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 
     //TODO: GET ALL PRODUCT
+    @Override
     public List<ProductResponseDto> getAllProducts(){
-        LOGGER.info("GET ALL PRODUCTS IS HIT");
         String sql = """
                     SELECT p.id AS id, p.name AS name, p.sku AS sku, p.description AS description,
                     p.price AS price, p.stock_quantity AS quantity FROM products p
@@ -85,7 +83,6 @@ public class ProductRepositoryImpl implements ProductRepository {
                 return productResponse;
             });
         }catch (DataAccessException e){
-            LOGGER.error("ERROR IN GET ALL PRODUCTS IS: {}", e.getMessage());
             throw e;
         }
     }
