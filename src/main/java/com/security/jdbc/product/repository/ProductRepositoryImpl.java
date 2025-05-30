@@ -12,18 +12,17 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class ProductRepository implements IProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductRepositoryImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductRepository(JdbcTemplate jdbcTemplate){
+    public ProductRepositoryImpl(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 
