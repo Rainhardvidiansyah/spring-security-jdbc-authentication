@@ -2,16 +2,15 @@ package com.security.jdbc.product.service;
 
 
 import com.security.jdbc.product.dto.request.CreateProductDtoRequest;
-import com.security.jdbc.product.repository.IProductRepository;
 import com.security.jdbc.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductService implements IProductService {
+public class ProductServiceImpl implements ProductService {
 
-    private final IProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public ProductService(IProductRepository productRepository){
+    public ProductServiceImpl(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
