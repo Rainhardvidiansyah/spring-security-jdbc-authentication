@@ -12,16 +12,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,74 +30,89 @@ class ProductRepositoryImplTest {
     @InjectMocks
     private ProductRepositoryImpl productRepositoryImpl;
 
+    @Test
+    void insertProduct_successfulInsert_returnsDto() {
+        // Arrange
+        CreateProductDtoRequest request = new CreateProductDtoRequest();
+        request.setName("Test Product");
+        request.setSku("SKU123");
+        request.setDescription("Description");
+        request.setPrice(100.0);
+        request.setStockQuantity(10);
+
+        Mockito.when(jdbcTemplate.update(Mockito.any(PreparedStatementCreator.class))).thenReturn(1);
+
+        // Act
+        CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
+
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("Test Product", result.getName());
+    }
 
     @Test
-    void testInsertProductSuccess() {
+    void insertProduct_updateReturnsZero_returnsNull() {
         // Arrange
+        CreateProductDtoRequest request = new CreateProductDtoRequest();
+        request.setName("Test Product");
+        request.setSku("SKU123");
+        request.setDescription("Description");
+        request.setPrice(100.0);
+        request.setStockQuantity(10);
+
+        Mockito.when(jdbcTemplate.update(Mockito.any(PreparedStatementCreator.class))).thenReturn(0);
+
+        // Act
+        CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
+
+        // Assert
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void insertProduct_dataAccessException_throwsRuntimeException() {
+        // Arrange
+        CreateProductDtoRequest request = new CreateProductDtoRequest();
+        request.setName("Test Product");
+        request.setSku("SKU123");
+        request.setDescription("Description");
+        request.setPrice(100.0);
+        request.setStockQuantity(10);
+
+        Mockito.when(jdbcTemplate.update(Mockito.any(PreparedStatementCreator.class)))
+                .thenThrow(new DataAccessException("DB error") {});
+
+        // Act & Assert
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            productRepositoryImpl.insertProduct(request);
+        });
+    }
+
+
+
+    @Test
+    void insertProduct_shouldThrowException_whenJdbcFails() {
         CreateProductDtoRequest request = new CreateProductDtoRequest();
         request.setName("Test Product");
         request.setSku("SKU123");
         request.setDescription("Test Description");
         request.setPrice(99.00);
         request.setStockQuantity(10);
+        when(jdbcTemplate.update(ArgumentMatchers.any(PreparedStatementCreator.class),
+                        ArgumentMatchers.any(KeyHolder.class)))
+                .thenThrow(new DataAccessException("DB error") {});
 
-        ArgumentCaptor<PreparedStatementCreator> pscCaptor = ArgumentCaptor.forClass(PreparedStatementCreator.class);
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        keyHolder.getKeyList().add(Collections.singletonMap("GENERATED_KEY", 1L));
-
-        Mockito.when(jdbcTemplate.update(ArgumentMatchers.any(PreparedStatementCreator.class),
-                ArgumentMatchers.any(KeyHolder.class))).thenAnswer(invocation -> {
-            KeyHolder kh = invocation.getArgument(1);
-            List<Map<String, Object>> keyList = new ArrayList<>();
-            keyList.add(Collections.singletonMap("GENERATED_KEY", 1L));
-
-            Field keyListField = GeneratedKeyHolder.class.getDeclaredField("keyList");
-            keyListField.setAccessible(true);
-            keyListField.set(kh, keyList);
-
-            return 1;
-        });
-
-
-        // Act
-        CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("SKU123", result.getSku());
-    }
-
-    @Test
-    void testInsertProductFails() {
-        // Arrange
-        CreateProductDtoRequest request = new CreateProductDtoRequest();
-        request.setName("Test Product");
-        request.setSku("SKU123");
-        request.setDescription("Test Description");
-        request.setPrice(100.000);
-        request.setStockQuantity(10);
-
-        Mockito.when(jdbcTemplate.update(
-                ArgumentMatchers.any(PreparedStatementCreator.class),
-                ArgumentMatchers.any(KeyHolder.class)))
-                .thenReturn(0);
-
-        // Act
-        CreateProductDtoRequest result = productRepositoryImpl.insertProduct(request);
-
-        // Assert
-        assertNull(result);
+        assertThrows(RuntimeException.class, () -> productRepositoryImpl.insertProduct(request));
     }
 
 
-
     @Test
-    void testInsertProductThrowsException() {
+    void testInsert_thenThrowProductThrowsException() {
         // Arrange
         CreateProductDtoRequest request = new CreateProductDtoRequest();
         request.setName("Test Product");
 
-        Mockito.when(jdbcTemplate.update(ArgumentMatchers.any(PreparedStatementCreator.class), ArgumentMatchers.any(KeyHolder.class)))
+        when(jdbcTemplate.update(ArgumentMatchers.any(PreparedStatementCreator.class), ArgumentMatchers.any(KeyHolder.class)))
                 .thenThrow(new DataAccessException("DB error") {});
 
         // Act & Assert
@@ -121,7 +132,7 @@ class ProductRepositoryImplTest {
 
         List<ProductResponseDto> expectedList = List.of(mockProduct);
 
-        Mockito.when(jdbcTemplate.query(Mockito.anyString(), Mockito.any(RowMapper.class)))
+        when(jdbcTemplate.query(Mockito.anyString(), Mockito.any(RowMapper.class)))
                 .thenReturn(expectedList);
 
         // Act
@@ -146,7 +157,7 @@ class ProductRepositoryImplTest {
 
         List<ProductResponseDto> expectedList = List.of(mockProduct);
 
-        Mockito.when(jdbcTemplate.query(Mockito.anyString(), Mockito.any(RowMapper.class)))
+        when(jdbcTemplate.query(Mockito.anyString(), Mockito.any(RowMapper.class)))
                 .thenThrow(new DataAccessException("DB Error") {});
 
         Assertions.assertThrows(DataAccessException.class, () -> productRepositoryImpl.getAllProducts());
