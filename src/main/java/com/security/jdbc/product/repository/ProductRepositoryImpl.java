@@ -6,11 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
@@ -27,28 +30,31 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
 
+
     //TODO: ADD SAVE PRODUCT
     @Override
     public CreateProductDtoRequest insertProduct(CreateProductDtoRequest productDtoRequest){
-        //LOGGER.info("INSERT PRODUCT METHOD IS HIT");
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO products (name, sku, description, price, stock_quantity) VALUES (?, ?, ?, ?, ?)";
 
         try {
-
             int row = jdbcTemplate.update(
-                    connection -> {
-                        PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                        preparedStatement.setString(1, productDtoRequest.getName());
-                        preparedStatement.setString(2, productDtoRequest.getSku());
-                        preparedStatement.setString(3, productDtoRequest.getDescription());
-                        preparedStatement.setDouble(4, productDtoRequest.getPrice());
-                        preparedStatement.setInt(5, productDtoRequest.getStockQuantity());
-                        return preparedStatement;
-                    }, keyHolder);
+                    new PreparedStatementCreator() {
+                        @Override
+                        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                            preparedStatement.setString(1, productDtoRequest.getName());
+                            preparedStatement.setString(2, productDtoRequest.getSku());
+                            preparedStatement.setString(3, productDtoRequest.getDescription());
+                            preparedStatement.setDouble(4, productDtoRequest.getPrice());
+                            preparedStatement.setInt(5, productDtoRequest.getStockQuantity());
+                            return preparedStatement;
+                        }
+                    }
+            );
 
             Number key = keyHolder.getKey();
+            LOGGER.info("Key data: {}", key);
 
             if (row == 1) {
                 //Long productId = Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -57,7 +63,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-           // LOGGER.error("DB ERROR!", e);
+            LOGGER.info("Data Access Exception: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
