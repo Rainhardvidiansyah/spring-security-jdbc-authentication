@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    platform: h2
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: true
+    locations: classpath:db/h2
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 466856da640c75
+    password: 5e3d518d7bc0ca
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
+
+  test:
+    database:
+      replace: none
+
+server:
+  port: 9090
+
+access:
+  token:
+    secret: RxBnso0BBBeemEMOcOFrHTD67Sqgzo4M
+
