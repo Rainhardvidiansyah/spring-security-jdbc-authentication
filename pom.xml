@@ -160,7 +160,9 @@
 								<exclude>com/security/jdbc/mapper/**</exclude>
 								<exclude>com/security/jdbc/pojos/**</exclude>
 								<exclude>com.security.jdbc.product.dto/**</exclude>
-								<exclude>package com.security.jdbc.security</exclude>
+								<exclude>com.security.jdbc.security</exclude>
+								<exclude>**/product/repository/*Repository.class</exclude>
+								<exclude>**/product/service/*Service.class</exclude>
 							</excludes>
 						</configuration>
 					</execution>

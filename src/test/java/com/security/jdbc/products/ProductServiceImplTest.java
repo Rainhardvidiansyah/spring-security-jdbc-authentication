@@ -2,7 +2,7 @@ package com.security.jdbc.products;
 
 import com.security.jdbc.product.dto.request.CreateProductDtoRequest;
 import com.security.jdbc.product.repository.ProductRepository;
-import com.security.jdbc.product.service.ProductService;
+import com.security.jdbc.product.service.ProductServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,14 +14,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceImplTest {
 
 
     @Mock
     private ProductRepository productRepository;
 
     @InjectMocks
-    private ProductService productService;
+    private ProductServiceImpl productServiceImpl;
 
     @Test
     void saveProduct() {
@@ -36,7 +36,7 @@ class ProductServiceTest {
 
        // ProductService service = new ProductService(productRepository);
 
-        CreateProductDtoRequest savedProduct = productService.saveProduct(productDtoRequest);
+        CreateProductDtoRequest savedProduct = productServiceImpl.saveProduct(productDtoRequest);
 
         Assertions.assertNotNull(savedProduct);
 
