@@ -2,19 +2,18 @@
 name: erp-modules-project
 
 services:
-  mysql-db:
-    image: mysql:8.0
+  postgres-db:
+    image: postgres:15
     restart: always
-    container_name: mysql-db
+    container_name: postgres-db
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - "3320:3306"
-    networks:
-      - app-network
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ports:
+        -"5432:5432"
+      networks:
+        -"app-network"
 
 
   app:
@@ -62,7 +61,8 @@ networks:
 
 #from Google:
 #Docker Compose automatically reads the .env file located in the same directory as the docker-compose.yml file.
-#This behavior allows for managing environment variables conveniently without explicitly specifying them in the docker-compose.yml
+#This behavior allows for managing environment variables conveniently
+#without explicitly specifying them in the docker-compose.yml
 #or through command-line arguments.
 #The variables defined in the .env file are accessible both for Docker Compose's own configuration
 # and for the services defined within the docker-compose.yml.
