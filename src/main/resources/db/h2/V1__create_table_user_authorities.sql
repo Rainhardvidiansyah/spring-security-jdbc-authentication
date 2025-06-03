@@ -1,5 +1,9 @@
 -- PostgreSQL & H2 (PostgreSQL mode) compatible DDL
 
+DROP TABLE IF EXISTS user_authorities;
+DROP TABLE IF EXISTS authorities;
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
