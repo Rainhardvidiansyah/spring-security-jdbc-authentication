@@ -6,14 +6,16 @@ services:
     image: postgres:15
     restart: always
     container_name: postgres-db
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      ports:
-        -"5432:5432"
-      networks:
-        -"app-network"
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
 
 
   app:
@@ -25,13 +27,17 @@ services:
       - .env
     restart: always
     environment:
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_DATASOURCE_URL=${POSTGRES_URL}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=${DRIVER_CLASS_NAME}
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_FLYWAY_ENABLE=${SPRING_FLYWAY_ENABLE}
+      - SPRING_FLYWAY_LOCATIONS=${SPRING_FLYWAY_LOCATIONS}
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
     depends_on:
-      - mysql-db
+      - postgres-db
     ports:
       - "8080:8080"
     networks:
