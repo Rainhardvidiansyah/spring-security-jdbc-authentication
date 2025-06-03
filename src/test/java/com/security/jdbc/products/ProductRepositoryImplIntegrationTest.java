@@ -7,9 +7,11 @@ import com.security.jdbc.product.dto.response.ProductResponseDto;
 import com.security.jdbc.product.repository.ProductRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
@@ -19,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(locations = "classpath:application-test.yml")
 @ActiveProfiles("test")
 public class ProductRepositoryImplIntegrationTest {
 

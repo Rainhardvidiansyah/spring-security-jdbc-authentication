@@ -1,18 +1,18 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
     driverClassName: org.h2.Driver
     username: sa
     password:
     platform: h2
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
   flyway:
     enabled: true
-    locations: classpath:db/h2
+    locations: classpath:db/test-db
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
