@@ -8,19 +8,19 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailService{
+public class EmailServiceImpl implements EmailService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     private final JavaMailSender javaMailSender;
 
-    public EmailService(JavaMailSender javaMailSender) {
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
     private static final String sender = "module.rainhard@email.com";
 
-
+    @Override
     public String SendEmailText(EmailPayloads emailPayloads) {
         LOGGER.info("SEND SIMPLE EMAIL METHOD IS HIT");
 
