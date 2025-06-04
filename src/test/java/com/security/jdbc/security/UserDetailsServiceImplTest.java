@@ -1,7 +1,8 @@
 package com.security.jdbc.security;
 
-import com.security.jdbc.pojos.UserInfo;
-import com.security.jdbc.repository.UserRepository;
+import com.security.jdbc.authentication.dto.UserInfo;
+import com.security.jdbc.authentication.repository.UserRepository;
+import com.security.jdbc.authentication.security.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +44,7 @@ class UserDetailsServiceImplTest {
 
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 
-        Mockito.when(userRepository.findOneUser(email)).thenReturn(userInfo);
+        Mockito.when(userRepository.findOneUserByEnabledAndEmail(email)).thenReturn(userInfo);
         Mockito.when(userRepository.getUserAuthoritiesByUserEmail(email)).thenReturn(authorities);
 
         // Act
@@ -57,7 +58,7 @@ class UserDetailsServiceImplTest {
         assertTrue(userDetails.isEnabled());
 
         //Verify interaction
-        Mockito.verify(userRepository, Mockito.times(1)).findOneUser(email);
+        Mockito.verify(userRepository, Mockito.times(1)).findOneUserByEnabledAndEmail(email);
         Mockito.verify(userRepository, Mockito.times(1)).getUserAuthoritiesByUserEmail(email);
         verifyNoMoreInteractions(userRepository);
     }

@@ -1,4 +1,4 @@
-package com.security.jdbc.dto.request;
+package com.security.jdbc.authentication.dto;
 
 public class RegistrationRequestDto {
 

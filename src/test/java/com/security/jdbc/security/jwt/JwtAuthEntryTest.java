@@ -1,5 +1,6 @@
 package com.security.jdbc.security.jwt;
 
+import com.security.jdbc.authentication.security.jwt.JwtAuthEntry;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
