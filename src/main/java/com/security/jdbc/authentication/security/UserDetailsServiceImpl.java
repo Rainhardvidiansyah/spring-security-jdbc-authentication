@@ -1,6 +1,6 @@
 package com.security.jdbc.authentication.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.security.jdbc.authentication.dto.UserInfo;
 import com.security.jdbc.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final ObjectMapper objectMapper;
+
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository, ObjectMapper objectMapper) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.objectMapper = objectMapper;
     }
 
 
