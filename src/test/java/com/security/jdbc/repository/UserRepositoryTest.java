@@ -1,9 +1,10 @@
 package com.security.jdbc.repository;
 
-import com.security.jdbc.mapper.AuthoritiesMapper;
-import com.security.jdbc.mapper.UserInfoMapper;
-import com.security.jdbc.pojos.Authorities;
-import com.security.jdbc.pojos.UserInfo;
+import com.security.jdbc.authentication.repository.UserRepository;
+import com.security.jdbc.authentication.mapper.AuthoritiesMapper;
+import com.security.jdbc.authentication.mapper.UserInfoMapper;
+import com.security.jdbc.authentication.dto.Authorities;
+import com.security.jdbc.authentication.dto.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,7 +52,7 @@ class UserRepositoryTest {
 
 
     @Test
-    void findOneUser() {
+    void findOneUserByEnabledAndEmail() {
         String email = "john@email.com";
 
         UserInfo userInfo = new UserInfo();
@@ -70,7 +71,7 @@ class UserRepositoryTest {
                         Mockito.eq(email)
                         )).thenReturn(userInfo);
 
-        UserInfo result = userRepository.findOneUser(email);
+        UserInfo result = userRepository.findOneUserByEnabledAndEmail(email);
 
         // Assert
         assertNotNull(result);
@@ -83,7 +84,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findOneUser_shouldReturnNull_whenUserDoesNotExist() {
+    void findOneUser_shouldReturnNull_whenUserByEnabledAndEmailDoesNotExist() {
         // Arrange
         String email = "nonexistent@example.com";
 
@@ -94,7 +95,7 @@ class UserRepositoryTest {
         )).thenThrow(new EmptyResultDataAccessException(1));
 
         // Act
-        UserInfo result = userRepository.findOneUser(email);
+        UserInfo result = userRepository.findOneUserByEnabledAndEmail(email);
 
         // Assert
         assertNull(result);
