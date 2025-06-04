@@ -18,15 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepository {
+public class UserRepositoryImpl implements UserRepository{
 
-    private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
-    public UserRepository(JdbcTemplate jdbcTemplate){
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public void addUser(String email, String password){
         String sql = """ 
         INSERT INTO users (email, password) VALUES (?,?)
@@ -37,6 +38,7 @@ public class UserRepository {
     }
 
 
+    @Override
     public UserInfo findOneUserByEnabledAndEmail(String email){
         String sql = """
         SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
@@ -51,7 +53,8 @@ public class UserRepository {
     }
 
 
-    public List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email) {
+    @Override
+    public List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email){
 
             String authoritiesQuery = """
         SELECT a.authorities_name as authority
@@ -73,6 +76,7 @@ public class UserRepository {
 
 
 
+    @Override
     public List<UserInfo> getAllUsers(){
         logger.info("Get all users method is hit");
 
