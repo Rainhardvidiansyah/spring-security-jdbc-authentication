@@ -162,11 +162,10 @@
 						</goals>
 						<configuration>
 							<excludes>
-								<exclude>com/security/jdbc/dto/**</exclude>
-								<exclude>com/security/jdbc/mapper/**</exclude>
-								<exclude>com/security/jdbc/pojos/**</exclude>
-								<exclude>com.security.jdbc.product.dto/**</exclude>
-								<exclude>com.security.jdbc.security</exclude>
+								<exclude>com/security/jdbc/authentication/security/**</exclude>
+								<exclude>com/security/jdbc/authentication/dto/**</exclude>
+								<exclude>com/security/jdbc/authentication/mapper/**</exclude>
+								<exclude>com/security/jdbc/product/dto/**</exclude>
 								<exclude>**/product/repository/*Repository.class</exclude>
 								<exclude>**/product/service/*Service.class</exclude>
 							</excludes>
