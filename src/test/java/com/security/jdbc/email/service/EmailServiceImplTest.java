@@ -15,13 +15,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class EmailServiceTest {
+class EmailServiceImplTest {
+
 
     @Mock
     private JavaMailSender javaMailSender;
 
     @InjectMocks
-    private EmailService emailService;
+    private EmailServiceImpl emailServiceImpl;
 
     @Test
     void SendEmailText() {
@@ -40,10 +41,10 @@ class EmailServiceTest {
 
         javaMailSender.send(simpleMailMessage);
 
-        String sendingEmail = emailService.SendEmailText(emailPayloads);
+
+        String sendingEmail = emailServiceImpl.SendEmailText(emailPayloads);
 
         Assertions.assertEquals("Successfully send email to: user@email.com", sendingEmail);
-
 
         Mockito.verify(javaMailSender, Mockito.times(1)).send(simpleMailMessage);
     }
@@ -68,7 +69,7 @@ class EmailServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                emailService.SendEmailText(emailPayloads)
+                emailServiceImpl.SendEmailText(emailPayloads)
         );
 
 

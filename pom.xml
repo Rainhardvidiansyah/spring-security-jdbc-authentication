@@ -163,11 +163,14 @@
 						<configuration>
 							<excludes>
 								<exclude>com/security/jdbc/authentication/security/**</exclude>
+								<exclude>com/security/jdbc/authentication/repository/UserRepositoryRunner.class</exclude>
 								<exclude>com/security/jdbc/authentication/dto/**</exclude>
 								<exclude>com/security/jdbc/authentication/mapper/**</exclude>
 								<exclude>com/security/jdbc/product/dto/**</exclude>
 								<exclude>**/product/repository/*Repository.class</exclude>
 								<exclude>**/product/service/*Service.class</exclude>
+								<exclude>**/email/service/*Service.class</exclude>
+								<exclude>com/security/jdbc/email/dto/**</exclude>
 							</excludes>
 						</configuration>
 					</execution>
