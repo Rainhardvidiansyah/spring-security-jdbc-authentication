@@ -1,9 +1,10 @@
-package com.security.jdbc.service;
+package com.security.jdbc.authentication;
 
 
-import com.security.jdbc.authentication.service.UserService;
-import com.security.jdbc.authentication.repository.UserRepositoryImpl;
+import com.security.jdbc.authentication.repository.UserRepository;
+import com.security.jdbc.authentication.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,16 +14,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     @Mock
-    private UserRepositoryImpl userRepositoryImpl;
+    private UserRepository userRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
 
     @Test
@@ -30,14 +31,15 @@ public class UserServiceTest {
         String email = "kucing.hoki@email.com";
         String password = "password";
 
+        UserRepository repository = Mockito.mock(UserRepository.class);
 
         Mockito.when(passwordEncoder.encode(password))
                         .thenReturn("encodedPassword");
 
-        var result = userService.addUser(email, password);
+        var result = userServiceImpl.addUser(email, password);
 
         Mockito.verify(passwordEncoder, Mockito.times(1)).encode(password);
-        Mockito.verify(userRepositoryImpl, Mockito.times(1)).addUser(email, "encodedPassword"); //must be encoded. See the service which repository.add saves email and encoded_password
+        Mockito.verify(userRepository, Mockito.times(1)).addUser(email, "encodedPassword"); //must be encoded. See the service which repository.add saves email and encoded_password
 
         Assertions.assertEquals("User registered successfully!", result);
     }
