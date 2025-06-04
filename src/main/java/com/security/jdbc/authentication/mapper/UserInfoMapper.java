@@ -1,6 +1,6 @@
-package com.security.jdbc.mapper;
+package com.security.jdbc.authentication.mapper;
 
-import com.security.jdbc.pojos.UserInfo;
+import com.security.jdbc.authentication.dto.UserInfo;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

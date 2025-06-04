@@ -1,4 +1,4 @@
-package com.security.jdbc.controller;
+package com.security.jdbc.authentication.controller;
 
 
 import org.springframework.web.bind.annotation.GetMapping;

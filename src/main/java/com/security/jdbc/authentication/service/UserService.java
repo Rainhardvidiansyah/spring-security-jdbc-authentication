@@ -1,7 +1,7 @@
-package com.security.jdbc.service;
+package com.security.jdbc.authentication.service;
 
 
-import com.security.jdbc.repository.UserRepository;
+import com.security.jdbc.authentication.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

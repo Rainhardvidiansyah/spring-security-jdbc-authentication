@@ -1,6 +1,6 @@
-package com.security.jdbc.security.jwt;
+package com.security.jdbc.authentication.security.jwt;
 
-import com.security.jdbc.security.UserDetailsServiceImpl;
+import com.security.jdbc.authentication.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

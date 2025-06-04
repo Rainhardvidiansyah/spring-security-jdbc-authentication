@@ -1,6 +1,4 @@
-package com.security.jdbc.pojos;
-
-import java.util.List;
+package com.security.jdbc.authentication.dto;
 
 public class UserInfo {
 

@@ -1,10 +1,10 @@
-package com.security.jdbc.repository;
+package com.security.jdbc.authentication.repository;
 
 
-import com.security.jdbc.mapper.AuthoritiesMapper;
-import com.security.jdbc.mapper.UserInfoMapper;
-import com.security.jdbc.pojos.Authorities;
-import com.security.jdbc.pojos.UserInfo;
+import com.security.jdbc.authentication.mapper.AuthoritiesMapper;
+import com.security.jdbc.authentication.mapper.UserInfoMapper;
+import com.security.jdbc.authentication.dto.Authorities;
+import com.security.jdbc.authentication.dto.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -37,7 +37,7 @@ public class UserRepository {
     }
 
 
-    public UserInfo findOneUser(String email){
+    public UserInfo findOneUserByEnabledAndEmail(String email){
         String sql = """
         SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
         """;

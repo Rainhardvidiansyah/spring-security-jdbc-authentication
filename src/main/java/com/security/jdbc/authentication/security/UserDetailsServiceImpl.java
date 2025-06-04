@@ -1,8 +1,8 @@
-package com.security.jdbc.security;
+package com.security.jdbc.authentication.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.security.jdbc.pojos.UserInfo;
-import com.security.jdbc.repository.UserRepository;
+import com.security.jdbc.authentication.dto.UserInfo;
+import com.security.jdbc.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +14,7 @@ import java.util.List;
 
 
 @Service
-public class UserDetailsServiceImpl
-        implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     private final UserRepository userRepository;
@@ -36,7 +35,7 @@ public class UserDetailsServiceImpl
             throw new UsernameNotFoundException("Username cannot be null or empty");
         }
 
-        UserInfo userInfo = userRepository.findOneUser(username);
+        UserInfo userInfo = userRepository.findOneUserByEnabledAndEmail(username);
         List<GrantedAuthority> authorities = userRepository.getUserAuthoritiesByUserEmail(userInfo.getEmail());
 
         return new UserDetailsImpl(userInfo.getEmail(), userInfo.getPassword(), authorities, userInfo.isEnabled());

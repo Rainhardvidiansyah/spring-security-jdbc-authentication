@@ -1,13 +1,14 @@
 package com.security.jdbc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.security.jdbc.dto.request.LoginRequestDto;
-import com.security.jdbc.dto.request.RegistrationRequestDto;
-import com.security.jdbc.security.UserDetailsServiceImpl;
-import com.security.jdbc.security.jwt.JwtAuthEntry;
-import com.security.jdbc.security.jwt.JwtAuthFilter;
-import com.security.jdbc.security.jwt.JwtService;
-import com.security.jdbc.service.UserService;
+import com.security.jdbc.authentication.controller.AuthenticationController;
+import com.security.jdbc.authentication.dto.request.LoginRequestDto;
+import com.security.jdbc.authentication.dto.request.RegistrationRequestDto;
+import com.security.jdbc.authentication.security.UserDetailsServiceImpl;
+import com.security.jdbc.authentication.security.jwt.JwtAuthEntry;
+import com.security.jdbc.authentication.security.jwt.JwtAuthFilter;
+import com.security.jdbc.authentication.security.jwt.JwtService;
+import com.security.jdbc.authentication.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
