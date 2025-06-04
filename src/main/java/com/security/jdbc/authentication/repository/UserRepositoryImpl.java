@@ -1,10 +1,10 @@
-package com.security.jdbc.repository;
+package com.security.jdbc.authentication.repository;
 
 
-import com.security.jdbc.mapper.AuthoritiesMapper;
-import com.security.jdbc.mapper.UserInfoMapper;
-import com.security.jdbc.pojos.Authorities;
-import com.security.jdbc.pojos.UserInfo;
+import com.security.jdbc.authentication.mapper.AuthoritiesMapper;
+import com.security.jdbc.authentication.mapper.UserInfoMapper;
+import com.security.jdbc.authentication.dto.Authorities;
+import com.security.jdbc.authentication.dto.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,15 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepository {
+public class UserRepositoryImpl implements UserRepository{
 
-    private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
-    public UserRepository(JdbcTemplate jdbcTemplate){
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public void addUser(String email, String password){
         String sql = """ 
         INSERT INTO users (email, password) VALUES (?,?)
@@ -37,7 +38,8 @@ public class UserRepository {
     }
 
 
-    public UserInfo findOneUser(String email){
+    @Override
+    public UserInfo findOneUserByEnabledAndEmail(String email){
         String sql = """
         SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
         """;
@@ -51,7 +53,8 @@ public class UserRepository {
     }
 
 
-    public List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email) {
+    @Override
+    public List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email){
 
             String authoritiesQuery = """
         SELECT a.authorities_name as authority
@@ -73,6 +76,7 @@ public class UserRepository {
 
 
 
+    @Override
     public List<UserInfo> getAllUsers(){
         logger.info("Get all users method is hit");
 

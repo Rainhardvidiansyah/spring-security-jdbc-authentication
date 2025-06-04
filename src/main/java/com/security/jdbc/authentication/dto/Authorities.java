@@ -1,4 +1,4 @@
-package com.security.jdbc.pojos;
+package com.security.jdbc.authentication.dto;
 
 public class Authorities {
 

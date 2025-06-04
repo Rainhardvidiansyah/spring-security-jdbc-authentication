@@ -2,11 +2,10 @@ package com.security.jdbc.email.controller;
 
 import com.security.jdbc.email.dto.EmailPayloads;
 import com.security.jdbc.email.service.EmailService;
-import com.security.jdbc.security.UserDetailsServiceImpl;
-import com.security.jdbc.security.jwt.JwtAuthEntry;
-import com.security.jdbc.security.jwt.JwtAuthFilter;
-import com.security.jdbc.security.jwt.JwtService;
-import com.security.jdbc.service.UserService;
+import com.security.jdbc.authentication.security.UserDetailsServiceImpl;
+import com.security.jdbc.authentication.security.jwt.JwtAuthEntry;
+import com.security.jdbc.authentication.security.jwt.JwtAuthFilter;
+import com.security.jdbc.authentication.security.jwt.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -29,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class EmailControllerTest {
 
-    @MockBean
-    private UserService userService;
 
     @MockBean
     private AuthenticationManager authenticationManager;

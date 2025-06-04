@@ -1,15 +1,12 @@
-package com.security.jdbc.mapper;
+package com.security.jdbc.authentication.mapper;
 
-import com.security.jdbc.pojos.Authorities;
-import com.security.jdbc.pojos.UserInfo;
+import com.security.jdbc.authentication.dto.Authorities;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AuthoritiesMapper implements ResultSetExtractor<List<Authorities>> {

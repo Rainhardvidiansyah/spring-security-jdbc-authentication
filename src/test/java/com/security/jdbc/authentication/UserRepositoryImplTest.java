@@ -1,9 +1,10 @@
-package com.security.jdbc.repository;
+package com.security.jdbc.authentication;
 
-import com.security.jdbc.mapper.AuthoritiesMapper;
-import com.security.jdbc.mapper.UserInfoMapper;
-import com.security.jdbc.pojos.Authorities;
-import com.security.jdbc.pojos.UserInfo;
+import com.security.jdbc.authentication.repository.UserRepositoryImpl;
+import com.security.jdbc.authentication.mapper.AuthoritiesMapper;
+import com.security.jdbc.authentication.mapper.UserInfoMapper;
+import com.security.jdbc.authentication.dto.Authorities;
+import com.security.jdbc.authentication.dto.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,14 +24,14 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-class UserRepositoryTest {
+class UserRepositoryImplTest {
 
 
     @Mock
     private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private UserRepository userRepository;
+    private UserRepositoryImpl userRepositoryImpl;
 
     @Test
     void addUser() {
@@ -39,7 +40,7 @@ class UserRepositoryTest {
         String password = "securePassword";
 
         // Act
-        userRepository.addUser(email, password);
+        userRepositoryImpl.addUser(email, password);
 
         // Assert
         Mockito.verify(jdbcTemplate, times(1)).update(
@@ -51,7 +52,7 @@ class UserRepositoryTest {
 
 
     @Test
-    void findOneUser() {
+    void findOneUserByEnabledAndEmail() {
         String email = "john@email.com";
 
         UserInfo userInfo = new UserInfo();
@@ -70,7 +71,7 @@ class UserRepositoryTest {
                         Mockito.eq(email)
                         )).thenReturn(userInfo);
 
-        UserInfo result = userRepository.findOneUser(email);
+        UserInfo result = userRepositoryImpl.findOneUserByEnabledAndEmail(email);
 
         // Assert
         assertNotNull(result);
@@ -83,7 +84,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findOneUser_shouldReturnNull_whenUserDoesNotExist() {
+    void findOneUser_shouldReturnNull_whenUserByEnabledAndEmailDoesNotExist() {
         // Arrange
         String email = "nonexistent@example.com";
 
@@ -94,7 +95,7 @@ class UserRepositoryTest {
         )).thenThrow(new EmptyResultDataAccessException(1));
 
         // Act
-        UserInfo result = userRepository.findOneUser(email);
+        UserInfo result = userRepositoryImpl.findOneUserByEnabledAndEmail(email);
 
         // Assert
         assertNull(result);
@@ -121,7 +122,7 @@ class UserRepositoryTest {
         )).thenReturn(mockAuthorities);
 
         // Act
-        List<GrantedAuthority> result = userRepository.getUserAuthoritiesByUserEmail(email);
+        List<GrantedAuthority> result = userRepositoryImpl.getUserAuthoritiesByUserEmail(email);
 
         // Assert
         assertNotNull(result);
@@ -158,7 +159,7 @@ class UserRepositoryTest {
         )).thenReturn(mockUsers);
 
         // Act
-        List<UserInfo> result = userRepository.getAllUsers();
+        List<UserInfo> result = userRepositoryImpl.getAllUsers();
 
         // Assert
         assertNotNull(result);

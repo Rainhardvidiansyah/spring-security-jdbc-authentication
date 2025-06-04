@@ -1,4 +1,4 @@
-package com.security.jdbc.security;
+package com.security.jdbc.authentication.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

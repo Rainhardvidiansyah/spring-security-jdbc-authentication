@@ -1,20 +1,20 @@
-package com.security.jdbc.dto.request;
+package com.security.jdbc.authentication.dto;
 
-public class RegistrationRequestDto {
+public class UserInfo {
 
     private String email;
 
     private String password;
 
+    private boolean enabled;
 
-    public RegistrationRequestDto() {
-    }
+    public UserInfo() {}
 
-    public RegistrationRequestDto(String email, String password) {
+    public UserInfo(String email, String password, boolean enabled) {
         this.email = email;
         this.password = password;
+        this.enabled = enabled;
     }
-
 
     public String getEmail() {
         return email;
@@ -32,11 +32,20 @@ public class RegistrationRequestDto {
         this.password = password;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 
     @Override
     public String toString() {
-        return "RegistrationRequestDto -> " +
+        return "UserInfo{" +
                 "email='" + email + '\'' +
-                ", password='" + password + '\'';
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                '}';
     }
 }

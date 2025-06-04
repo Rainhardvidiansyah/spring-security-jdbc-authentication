@@ -1,11 +1,11 @@
-package com.security.jdbc.controller;
+package com.security.jdbc.authentication.controller;
 
 
-import com.security.jdbc.dto.request.LoginRequestDto;
-import com.security.jdbc.dto.request.RegistrationRequestDto;
-import com.security.jdbc.security.UserDetailsImpl;
-import com.security.jdbc.security.jwt.JwtService;
-import com.security.jdbc.service.UserService;
+import com.security.jdbc.authentication.dto.request.LoginRequestDto;
+import com.security.jdbc.authentication.dto.request.RegistrationRequestDto;
+import com.security.jdbc.authentication.security.UserDetailsImpl;
+import com.security.jdbc.authentication.security.jwt.JwtService;
+import com.security.jdbc.authentication.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

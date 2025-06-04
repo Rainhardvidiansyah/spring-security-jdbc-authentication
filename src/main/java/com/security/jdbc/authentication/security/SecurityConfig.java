@@ -1,11 +1,10 @@
-package com.security.jdbc.security;
+package com.security.jdbc.authentication.security;
 
 
-import com.security.jdbc.security.jwt.JwtAuthEntry;
-import com.security.jdbc.security.jwt.JwtAuthFilter;
+import com.security.jdbc.authentication.security.jwt.JwtAuthEntry;
+import com.security.jdbc.authentication.security.jwt.JwtAuthFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

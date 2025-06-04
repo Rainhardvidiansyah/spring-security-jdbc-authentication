@@ -1,10 +1,10 @@
 package com.security.jdbc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.security.jdbc.dto.request.LoginRequestDto;
-import com.security.jdbc.dto.request.RegistrationRequestDto;
-import com.security.jdbc.security.jwt.JwtService;
-import com.security.jdbc.service.UserService;
+import com.security.jdbc.authentication.dto.request.LoginRequestDto;
+import com.security.jdbc.authentication.dto.request.RegistrationRequestDto;
+import com.security.jdbc.authentication.security.jwt.JwtService;
+import com.security.jdbc.authentication.service.UserService;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
