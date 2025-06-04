@@ -1,4 +1,4 @@
-package com.security.jdbc.repository;
+package com.security.jdbc.authentication;
 
 import com.security.jdbc.authentication.repository.UserRepositoryImpl;
 import com.security.jdbc.authentication.mapper.AuthoritiesMapper;
