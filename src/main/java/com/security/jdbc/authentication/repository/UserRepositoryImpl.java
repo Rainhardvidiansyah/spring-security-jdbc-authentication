@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public UserInfo findOneUserByEnabledAndEmail(String email){
         String sql = """
-        SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
+        SELECT id, email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
         """;
         try{
             UserInfo userInfo =
