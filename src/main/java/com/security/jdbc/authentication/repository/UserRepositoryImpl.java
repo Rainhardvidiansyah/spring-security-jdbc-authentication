@@ -75,6 +75,21 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
 
+    @Override
+    public UserInfo getOneUserById(Long id){
+        String sql = """
+                SELECT u.id, u.email, password, u.enabled FROM users u WHERE u.enabled = TRUE and u.id = ?
+                """;
+        try{
+            UserInfo userInfo =
+                    jdbcTemplate.queryForObject(sql, new UserInfoMapper(), id);
+            return userInfo;
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
+
 
     @Override
     public List<UserInfo> getAllUsers(){
