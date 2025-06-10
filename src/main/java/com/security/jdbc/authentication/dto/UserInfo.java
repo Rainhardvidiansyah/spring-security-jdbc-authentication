@@ -2,6 +2,8 @@ package com.security.jdbc.authentication.dto;
 
 public class UserInfo {
 
+    private Long id;
+
     private String email;
 
     private String password;
@@ -10,10 +12,19 @@ public class UserInfo {
 
     public UserInfo() {}
 
-    public UserInfo(String email, String password, boolean enabled) {
+    public UserInfo(Long id, String email, String password, boolean enabled) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
