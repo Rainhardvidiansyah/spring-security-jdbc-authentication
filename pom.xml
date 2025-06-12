@@ -171,6 +171,12 @@
 								<exclude>**/product/service/*Service.class</exclude>
 								<exclude>**/email/service/*Service.class</exclude>
 								<exclude>com/security/jdbc/email/dto/**</exclude>
+
+								<exclude>**/refreshtoken/repository/*Repository.class</exclude>
+								<exclude>**/refreshtoken/service/*Service.class</exclude>
+								<exclude>com/security/jdbc/refreshtoken/dto/**</exclude>
+								<exclude>com/security/jdbc/authentication/exception</exclude>
+								<exclude>com/security/jdbc/authentication/security/jwt/RefreshTokenBuilderService.class</exclude>
 							</excludes>
 						</configuration>
 					</execution>
