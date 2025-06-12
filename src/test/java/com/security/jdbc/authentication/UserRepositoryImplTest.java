@@ -61,8 +61,9 @@ class UserRepositoryImplTest {
         userInfo.setEnabled(true);
 
         String sql = """
-        SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
+        SELECT id, email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
         """;
+
         Mockito.when(
                 jdbcTemplate.queryForObject(
                         //anyString(), it works
