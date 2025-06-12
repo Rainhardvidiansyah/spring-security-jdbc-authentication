@@ -133,6 +133,10 @@ public class AuthenticationController {
         // 1. get token from cookie
         Optional<String> tokenOpt = this.refreshTokenBuilderService.verifyRefreshToken(request);
 
+        if(tokenOpt.isEmpty()){
+            return new ResponseEntity<>("Token Not Found", HttpStatus.UNAUTHORIZED);
+        }
+
         // 2. Extract token
         Long id = this.refreshTokenBuilderService.extractUserIdFromSubject(tokenOpt.get());
 
@@ -140,9 +144,6 @@ public class AuthenticationController {
         // 3. Get user id from user details as the token saved id
         UserDetailsImpl userDetails = (UserDetailsImpl) this.userDetailsService.loadUserByUserId(id);
 
-        if(tokenOpt.isEmpty()){
-            return new ResponseEntity<>("Token Not Found", HttpStatus.UNAUTHORIZED);
-        }
 
         // 4. Validate token or compare token and user id
         boolean validateToken = this.refreshTokenBuilderService.isTokenValid(tokenOpt.get(), userDetails.getId());
@@ -159,6 +160,7 @@ public class AuthenticationController {
 
         return new ResponseEntity<>(Map.of("New Access token", generatedNewToken), HttpStatus.OK);
     }
+
 
 
 
