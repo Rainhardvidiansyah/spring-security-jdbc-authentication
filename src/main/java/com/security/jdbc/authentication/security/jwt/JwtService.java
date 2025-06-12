@@ -1,5 +1,6 @@
 package com.security.jdbc.authentication.security.jwt;
 
+import com.security.jdbc.authentication.security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 
 import io.jsonwebtoken.JwtException;
@@ -8,16 +9,15 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,23 +30,29 @@ public class JwtService {
 
     private static final SecretKey key = Jwts.SIG.HS256.key().build();
 
-    private static final Long expiration = 3600000L;;
+    private static final long accessTokenExpiration = 15 * 60 * 1000;
 
 
 
-    //GENERATE TOKEN JWT
-    public String generateTokenJwt(Authentication authentication){
-        LOGGER.info("Content of authentication: {}", authentication);
+
+
+    //TODO: GENERATE TOKEN JWT
+    public String generateTokenJwt(UserDetailsImpl userDetails){
+
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("email", authentication.getName());
-        claims.put("role", authentication.getAuthorities());
+        claims.put("email", userDetails.getUsername());
+        claims.put("roles", roles);
 
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + expiration);
+        Date expireDate = new Date(currentDate.getTime() + accessTokenExpiration);
 
         return Jwts.builder()
-                .subject(authentication.getName())
+                .subject(String.valueOf(userDetails.getId()))
                 .claims(claims)
                 .issuedAt(new Date())
                 .issuer("ERP-MODULE-Rainhard")
@@ -56,7 +62,7 @@ public class JwtService {
     }
 
 
-    //TODO: GET EMAIL FROM JWT TOKEN
+    //TODO: GET EMAIL FROM JWT TOKEN AND JUST TRY TO GET CLAIMS
     public String getEmailFromJWT(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -67,10 +73,10 @@ public class JwtService {
 
 
     //TODO: CHECK IF TOKEN VALID
-    public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetailsImpl userDetails){
         try{
-            String subject = this.extractSubject(token);
-            return (subject.equals(userDetails.getUsername()) && !isTokenExpired(token));
+            final String subject = this.extractSubject(token);
+            return (subject.equals(String.valueOf(userDetails.getId()))) && !isTokenExpired(token);
         }
        catch(JwtException e){
             e.printStackTrace();
@@ -78,6 +84,17 @@ public class JwtService {
        }
     }
 
+
+    //TODO: EXTRACT USER ID FROM SUBJECT
+    public Long extractUserIdFromSubject(String token){
+
+        try{
+            String subject = String.valueOf(this.extractSubject(token));
+            return Long.parseLong(subject);
+        }catch (NumberFormatException e){
+            throw new RuntimeException(e);
+        }
+    }
 
 
     //TODO: Extract All Claims
@@ -117,12 +134,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+
     //TODO: EXTRACT SUBJECT
     public String extractSubject(String token){
-        String subject =  this.extractClaim(token, Claims::getSubject);
+        String subject = this.extractClaim(token, Claims::getSubject);
         LOGGER.info("Subject: {}", subject);
         return subject;
     }
+
 
 
 

@@ -1,10 +1,14 @@
 package com.security.jdbc.authentication.security.jwt;
 
+import com.security.jdbc.authentication.security.UserDetailsImpl;
 import com.security.jdbc.authentication.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +22,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthFilter.class);
 
     private final JwtService jwtService;
 
@@ -30,20 +35,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         final String token = this.getTokenFromRequest(request);
         // Validate Token
         if(token != null){
-            // get username from token
-            String email = jwtService.extractSubject(token);
 
-            if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            // get subject or userId from token
+            String sub = jwtService.extractSubject(token);
 
-                if(jwtService.isTokenValid(token, userDetails)){
+            LOGGER.info("Data sub: {}", sub);
+
+            if(sub != null && SecurityContextHolder.getContext().getAuthentication() == null){
+
+
+                Long userId = Long.parseLong(sub);
+
+                LOGGER.info("User id data: {}", userId);
+
+                UserDetails userDetails = userDetailsService.loadUserByUserId(userId);
+
+                if(jwtService.isTokenValid(token, (UserDetailsImpl) userDetails)){
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

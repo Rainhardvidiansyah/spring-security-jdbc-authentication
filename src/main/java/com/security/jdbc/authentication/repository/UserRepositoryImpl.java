@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public UserInfo findOneUserByEnabledAndEmail(String email){
         String sql = """
-        SELECT email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
+        SELECT id, email, password, enabled FROM users WHERE users.enabled = TRUE and users.email = ?
         """;
         try{
             UserInfo userInfo =
@@ -72,6 +72,21 @@ public class UserRepositoryImpl implements UserRepository{
             return authorities.stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
                     .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public UserInfo getOneUserById(Long id){
+        String sql = """
+                SELECT u.id, u.email, password, u.enabled FROM users u WHERE u.enabled = TRUE and u.id = ?
+                """;
+        try{
+            UserInfo userInfo =
+                    jdbcTemplate.queryForObject(sql, new UserInfoMapper(), id);
+            return userInfo;
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
 

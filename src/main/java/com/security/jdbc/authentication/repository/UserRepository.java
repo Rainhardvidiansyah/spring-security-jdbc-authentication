@@ -13,5 +13,7 @@ public interface UserRepository {
 
     List<GrantedAuthority> getUserAuthoritiesByUserEmail(String email);
 
+    UserInfo getOneUserById(Long id);
+
     List<UserInfo> getAllUsers();
 }

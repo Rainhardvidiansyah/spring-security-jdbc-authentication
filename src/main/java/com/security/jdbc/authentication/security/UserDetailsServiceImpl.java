@@ -1,6 +1,7 @@
 package com.security.jdbc.authentication.security;
 
 
+import com.security.jdbc.authentication.exception.UserIdNotFoundException;
 import com.security.jdbc.authentication.dto.UserInfo;
 import com.security.jdbc.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-
-
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -37,6 +36,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserInfo userInfo = userRepository.findOneUserByEnabledAndEmail(username);
         List<GrantedAuthority> authorities = userRepository.getUserAuthoritiesByUserEmail(userInfo.getEmail());
 
-        return new UserDetailsImpl(userInfo.getEmail(), userInfo.getPassword(), authorities, userInfo.isEnabled());
+        return new UserDetailsImpl(userInfo.getId(), userInfo.getEmail(), userInfo.getPassword(), authorities, userInfo.isEnabled());
+    }
+
+
+    public UserDetails loadUserByUserId(Long id)  throws UserIdNotFoundException {
+
+        if(id == null){
+            throw new UserIdNotFoundException("Id not found");
+        }
+
+        UserInfo userInfo = userRepository.getOneUserById(id);
+        List<GrantedAuthority> authorities = userRepository.getUserAuthoritiesByUserEmail(userInfo.getEmail());
+
+        return new UserDetailsImpl(userInfo.getId(), userInfo.getEmail(), userInfo.getPassword(), authorities, userInfo.isEnabled());
+
     }
 }

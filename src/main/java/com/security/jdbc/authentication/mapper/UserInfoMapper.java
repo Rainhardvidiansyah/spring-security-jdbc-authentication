@@ -11,6 +11,7 @@ public class UserInfoMapper implements RowMapper<UserInfo> {
     @Override
     public UserInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
             UserInfo userInfo = new UserInfo();
+            userInfo.setId(rs.getLong("id"));
             userInfo.setEmail(rs.getString("email"));
             userInfo.setPassword(rs.getString("password"));
             userInfo.setEnabled(rs.getBoolean("enabled"));
