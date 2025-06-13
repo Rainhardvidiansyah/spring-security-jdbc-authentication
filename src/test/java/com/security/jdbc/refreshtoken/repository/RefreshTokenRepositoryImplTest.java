@@ -68,5 +68,42 @@ class RefreshTokenRepositoryImplTest {
     }
 
 
+    @Test
+    void shouldSetTokenToRevoked() {
+        // given
+        Long userId = 1L;
+
+        Mockito.when(jdbcTemplate.update(ArgumentMatchers.anyString(),
+                ArgumentMatchers.eq(userId))).thenReturn(1);
+
+        // when
+        boolean result = refreshTokenRepository.setTokenToRevoked(userId);
+
+        // then
+        assertTrue(result);
+
+        Mockito.verify(jdbcTemplate).update(ArgumentMatchers.anyString(),
+                ArgumentMatchers.eq(userId));
+    }
+
+
+    @Test
+    void setTokenToRevoked_shouldReturnFalse_whenNoRowAffected() {
+        // given
+        Long userId = 2L;
+        Mockito.when(jdbcTemplate.update(ArgumentMatchers.anyString(),
+                ArgumentMatchers.eq(userId))).thenReturn(0); // no row updated
+
+        // when
+        boolean result = refreshTokenRepository.setTokenToRevoked(userId);
+
+        // then
+        assertFalse(result);
+        Mockito.verify(jdbcTemplate).update(ArgumentMatchers.anyString(),
+                ArgumentMatchers.eq(userId));
+    }
+
+
+
 
 }

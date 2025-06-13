@@ -36,5 +36,19 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository{
         }
     }
 
+    @Override
+    public boolean setTokenToRevoked(Long userId) {
+
+        try{
+            String sql = "UPDATE refresh_token SET revoked = TRUE WHERE user_id = ?";
+
+            int affectedRow = jdbcTemplate.update(sql, userId);
+
+            return affectedRow > 0;
+        }catch (DataAccessException e){
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

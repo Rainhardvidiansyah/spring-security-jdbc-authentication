@@ -162,6 +162,20 @@ public class AuthenticationController {
     }
 
 
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response){
+
+        Cookie cookie = new Cookie("refresh_token", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        LOGGER.info("COOKIE: {}", cookie.getValue());
+        return new ResponseEntity<>("User Logout", HttpStatus.OK);
+    }
+
+
+    //TODO: IMPLEMENT REFRESH TOKEN TO SAVE THE REFRESH TOKEN AND REVOKE THE REFRESH TOKEN!!!
+    //TODO: IT IS MANDATORY!!
 
 
 }

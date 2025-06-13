@@ -39,4 +39,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
         this.refreshTokenRepository.saveRefreshToken(refreshTokenDto);
 
     }
+
+    @Override
+    public boolean revokeToken(Long userId) {
+
+        if(userId == 0){
+            throw new RuntimeException("User id cannot be 0");
+        }
+
+        return refreshTokenRepository.setTokenToRevoked(userId);
+    }
 }
