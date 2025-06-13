@@ -183,4 +183,14 @@ public class AuthenticationControllerUnitTest {
     }
 
 
+    @Test
+    void testLogout_ShouldDeleteRefreshTokenCookie() throws Exception {
+        mockMvc.perform(get("/api/v1/users/auth/logout"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("User Logout"))
+                .andExpect(cookie().value("refresh_token", ""))
+                .andExpect(cookie().maxAge("refresh_token", 0))
+                .andExpect(cookie().path("refresh_token", "/"));
+    }
+
 }
