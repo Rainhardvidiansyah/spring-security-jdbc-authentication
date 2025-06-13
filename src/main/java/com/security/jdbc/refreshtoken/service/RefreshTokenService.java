@@ -5,4 +5,6 @@ import com.security.jdbc.refreshtoken.dto.request.CreateRefreshTokenDto;
 public interface RefreshTokenService {
 
     void saveRefreshToken(CreateRefreshTokenDto refreshTokenDto);
+
+    boolean revokeToken(Long userId);
 }
