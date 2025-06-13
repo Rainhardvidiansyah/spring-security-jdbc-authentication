@@ -2,6 +2,7 @@ package com.security.jdbc.refreshtoken.service;
 
 import com.security.jdbc.refreshtoken.dto.request.CreateRefreshTokenDto;
 import com.security.jdbc.refreshtoken.repository.RefreshTokenRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,5 +46,31 @@ class RefreshTokenServiceImplTest {
         assertTrue(dto.getExpiresAt().isAfter(dto.getCreatedAt()));
 
         Mockito.verify(refreshTokenRepository).saveRefreshToken(dto);
+    }
+
+    @Test
+    void revokeToken() {
+        Long userId = 1L;
+
+        Mockito.when(refreshTokenRepository.setTokenToRevoked(userId))
+                .thenReturn(true);
+
+        boolean token = refreshTokenServiceImpl.revokeToken(userId);
+
+        Assertions.assertTrue(token);
+
+        Mockito.verify(refreshTokenRepository).setTokenToRevoked(userId);
+    }
+
+    @Test
+    void failedRevoke_shouldReturnRuntimeException(){
+        RuntimeException runtimeException = Assertions.assertThrows(RuntimeException.class,
+                ()-> {refreshTokenServiceImpl.revokeToken(0L);
+        });
+
+        Assertions.assertEquals("User id cannot be 0", runtimeException.getMessage());
+
+        Mockito.verifyNoInteractions(refreshTokenRepository);
+
     }
 }
